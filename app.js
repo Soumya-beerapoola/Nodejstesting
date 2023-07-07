@@ -13,6 +13,7 @@ const urlToGetUserEmail = 'https://api.linkedin.com/v2/clientAwareMemberHandles?
 app.get('/getUserCredentials', async function (req, res) {
   let user = {};
   const code = req.query.code;
+  console.log('>>> Code:', code)
   const accessToken =  await getAccessToken(code);
   console.log('>>> AccessToken:', accessToken)
   const userProfile = await getUserProfile(accessToken);
@@ -20,7 +21,7 @@ app.get('/getUserCredentials', async function (req, res) {
   const userEmail = await getUserEmail(accessToken);
   console.log('>>> UserEmail:', userEmail)
   let resStatus = 400;
-  if(!(accessToken === null || userProfile === null || userEmail === null)) {
+  if(accessToken && userProfile && userEmail) {
     user = userBuilder(userProfile, userEmail);
     resStatus = 200;
   }
@@ -42,7 +43,7 @@ async function getAccessToken(code) {
   const parameters = {
     "grant_type": "authorization_code",
     "code": code,
-    "redirect_uri": 'http://localhost:8080/linkedin',
+    "redirect_uri": 'https://cq-linkedinfe.onrender.com/linkedin',
     "client_id": '78x7t1w2judka1',
     "client_secret": '4DnhkoqK1gLew8ts',
   };
